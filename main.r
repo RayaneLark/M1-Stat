@@ -3,6 +3,7 @@ data = read.csv("psychology.csv", TRUE)
 print(data)
 
 # ---- Question 1 ----
+
 # Statistiques descriptives pour l'IBE
 summary_IBE = summary(data$IBE)
 mean_IBE = mean(data$IBE)
@@ -34,6 +35,7 @@ cat("Écart-type:", sd_IP, "\n")
 cat("IQR:", IQR_IP, "\n")
 
 # ---- Question 2 ----
+
 # Créer un histogramme pour la variable IBE
 hist(data$IBE, main="Estimation de densité pour IBE", xlab="IBE", col="lightblue", border="black", probability=TRUE)
 lines(density(data$IBE), col="red", lwd=2)
@@ -72,6 +74,7 @@ legend("topright", legend="Densité", col="blue", lwd=2)
 
 
 # ---- Question 4 ----
+
 # Estimation par noyau de la densité pour IBE
 density_ibe = density(data$IBE)
 
@@ -98,17 +101,102 @@ density_ip_triangular = density(data$IP, kernel = "triangular", bw = "nrd")
 # Tracer le KDE pour IP avec noyau triangulaire
 plot(density_ip_triangular, main="Estimation par noyau de la densité pour IP (Noyau triangulaire)", xlab="IP", col="purple", lwd=2)
 
-#---- Question 6 ----
+# ---- Question 6 ----
+
 # Afficher le nuage de points entre les deux variables IBE et IP
-plot(data$IBE, data$IP, main="Nuage de points entre IBE et IP", xlab="IBE", ylab="IP", col="blue", pch=16)
+plot(data$IBE, data$IP, main="Nuage de points entre IBE et IP", xlab="IBE", ylab="IP", col=c("blue", "green"), pch=16)
 
 # Ajouter une régression linéaire pour illustrer la tendance
 abline(lm(IP ~ IBE, data=data), col="red", lwd=2)
 
 # Ajouter une légende
-legend("topright", legend="Régression linéaire", col="red", lwd=2)
+legend("topright", legend=c("IBE", "IP", "Régression linéaire"), col=c("blue", "green", "red"), lwd=2)
 
 # Calculer et afficher la corrélation
 correlation_coefficient = cor(data$IBE, data$IP)
 cat("Coefficient de corrélation entre IBE et IP:", correlation_coefficient, "\n")
 cat("La ligne de régression est inclinée vers le haut, cela suggère une relation positive entre les variables (quand l'une augmente, l'autre a tendance à augmenter).")
+
+# ---- Question 7 ----
+
+# Filtrer les valeurs positives avant la transformation logarithmique
+positive_values = data$IP > 0
+transformed_IBE = log(data$IBE[positive_values])
+transformed_IP = log(data$IP[positive_values])
+
+# Afficher le nuage de points avec les données transformées
+plot(transformed_IBE, transformed_IP, main="Nuage de points entre IBE et IP (Transformées logarithmiques)", xlab="log(IBE)", ylab="log(IP)", col=c("purple", "orange"), pch=16)
+
+# Ajouter une régression linéaire pour illustrer la tendance
+abline(lm(transformed_IP ~ transformed_IBE), col="red", lwd=2)
+
+# Ajouter une légende avec position manuelle
+legend("topright", legend=c("log(IBE)", "log(IP)", "Régression linéaire"), col=c("purple", "orange", "red"), lwd=2)
+
+# Calculer et afficher la corrélation pour les données transformées
+correlation_coefficient_transformed = cor(transformed_IBE, transformed_IP)
+cat("Coefficient de corrélation entre log(IBE) et log(IP):", correlation_coefficient_transformed, "\n")
+
+# ---- Question 8 ----
+
+# Calculer le coefficient de corrélation de Pearson
+correlation_pearson = cor(transformed_IBE, transformed_IP, method = "pearson")
+cat("Coefficient de corrélation de Pearson entre log(IBE) et log(IP):", correlation_pearson, "\n")
+
+# Calculer le coefficient de corrélation de Spearman
+correlation_spearman = cor(transformed_IBE, transformed_IP, method = "spearman")
+cat("Coefficient de corrélation de Spearman entre log(IBE) et log(IP):", correlation_spearman, "\n")
+
+# Calculer le coefficient de corrélation de Kendall
+correlation_kendall = cor(transformed_IBE, transformed_IP, method = "kendall")
+cat("Coefficient de corrélation de Kendall entre log(IBE) et log(IP):", correlation_kendall, "\n")
+
+# ---- Question 9 ----
+
+# Afficher le nuage de points avec les données transformées
+plot(transformed_IBE, transformed_IP, main="Nuage de points entre IBE et IP (Transformées logarithmiques)", xlab="log(IBE)", ylab="log(IP)", col=c("purple", "orange"), pch=16)
+
+# Ajouter une régression linéaire pour illustrer la tendance
+abline(lm(transformed_IP ~ transformed_IBE), col="red", lwd=2)
+
+# Ajouter une ligne diagonale (pente = 1) en rouge
+abline(a = 0, b = 1, col = "red", lwd = 2, lty = 2)
+
+# Ajouter les noms des axes
+text(x = min(transformed_IBE), y = max(transformed_IP), labels = "log(IBE)", pos = 4, col = "purple", cex = 1.2)
+text(x = max(transformed_IBE), y = min(transformed_IP), labels = "log(IP)", pos = 2, col = "orange", cex = 1.2)
+
+# Ajouter une légende avec position manuelle
+legend("topright", legend=c("log(IBE)", "log(IP)", "Régression linéaire", "Diagonale"), col=c("purple", "orange", "red", "red"), lwd=2)
+
+# Calculer et afficher la corrélation pour les données transformées
+correlation_coefficient_transformed = cor(transformed_IBE, transformed_IP)
+cat("Coefficient de corrélation entre log(IBE) et log(IP):", correlation_coefficient_transformed, "\n")
+
+# ---- Question 10 ----
+# Ouvrir le périphérique graphique pour le format PNG
+png("question10_plot.png", width = 900, height = 700)
+
+# Afficher le nuage de points avec les données transformées
+plot(transformed_IBE, transformed_IP, main="Nuage de points entre IBE et IP (Transformées logarithmiques)", xlab="log(IBE)", ylab="log(IP)", col=c("purple", "orange"), pch=16)
+
+# Ajouter une régression linéaire pour illustrer la tendance
+abline(lm(transformed_IP ~ transformed_IBE), col="red", lwd=2)
+
+# Ajouter une ligne diagonale (pente = 1) en rouge
+abline(a = 0, b = 1, col = "red", lwd = 2, lty = 2)
+
+# Ajouter les noms des axes
+text(x = min(transformed_IBE), y = max(transformed_IP), labels = "log(IBE)", pos = 4, col = "purple", cex = 1.2)
+text(x = max(transformed_IBE), y = min(transformed_IP), labels = "log(IP)", pos = 2, col = "orange", cex = 1.2)
+
+# Ajouter une légende avec position manuelle
+legend("topright", legend=c("log(IBE)", "log(IP)", "Régression linéaire", "Diagonale"), col=c("purple", "orange", "red", "red"), lwd=2)
+
+# Calculer et afficher la corrélation pour les données transformées
+correlation_coefficient_transformed = cor(transformed_IBE, transformed_IP)
+cat("Coefficient de corrélation entre log(IBE) et log(IP):", correlation_coefficient_transformed, "\n")
+
+# Fermer le périphérique graphique et enregistrer le fichier PNG
+dev.off()
+
