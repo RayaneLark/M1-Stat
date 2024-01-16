@@ -83,3 +83,32 @@ density_ip = density(data$IP)
 
 # Tracer le KDE pour IP
 plot(density_ip, main="Estimation par noyau de la densité pour IP", xlab="IP", col="green", lwd=2)
+
+# ---- Question 5 ----
+
+# Estimation par noyau de la densité pour IBE avec noyau triangulaire et validation croisée biaisée
+density_ibe_triangular = density(data$IBE, kernel = "triangular", bw = "nrd")
+
+# Tracer le KDE pour IBE avec noyau triangulaire
+plot(density_ibe_triangular, main="Estimation par noyau de la densité pour IBE (Noyau triangulaire)", xlab="IBE", col="orange", lwd=2)
+
+# Estimation par noyau de la densité pour IP avec noyau triangulaire et validation croisée biaisée
+density_ip_triangular = density(data$IP, kernel = "triangular", bw = "nrd")
+
+# Tracer le KDE pour IP avec noyau triangulaire
+plot(density_ip_triangular, main="Estimation par noyau de la densité pour IP (Noyau triangulaire)", xlab="IP", col="purple", lwd=2)
+
+#---- Question 6 ----
+# Afficher le nuage de points entre les deux variables IBE et IP
+plot(data$IBE, data$IP, main="Nuage de points entre IBE et IP", xlab="IBE", ylab="IP", col="blue", pch=16)
+
+# Ajouter une régression linéaire pour illustrer la tendance
+abline(lm(IP ~ IBE, data=data), col="red", lwd=2)
+
+# Ajouter une légende
+legend("topright", legend="Régression linéaire", col="red", lwd=2)
+
+# Calculer et afficher la corrélation
+correlation_coefficient = cor(data$IBE, data$IP)
+cat("Coefficient de corrélation entre IBE et IP:", correlation_coefficient, "\n")
+cat("La ligne de régression est inclinée vers le haut, cela suggère une relation positive entre les variables (quand l'une augmente, l'autre a tendance à augmenter).")
