@@ -1,22 +1,47 @@
+# ---- Question 1----
+
 # Charger les données
-data_2012 <- read.table("company2012.dat", header = FALSE)
-data_2017 <- read.table("company2017.dat", header = FALSE)
-data_2022 <- read.table("company2022.dat", header = FALSE)
+data_2012 = read.table("company2012.dat", header = FALSE)
+data_2017 = read.table("company2017.dat", header = FALSE)
+data_2022 = read.table("company2022.dat", header = FALSE)
 
-# Nommer les colonnes si nécessaire (à ajuster en fonction de vos données)
-colnames(data_2012) <- c("performances")
-colnames(data_2017) <- c("performances")
-colnames(data_2022) <- c("performances")
+# Renommer les colonnes
+colnames(data_2012) = colnames(data_2017) = colnames(data_2022) = "Performances"
 
-# Créer un histogramme pour chaque année et les superposer
-hist(data_2012$performances, col = "blue", main = "Distribution des performances", xlab = "Performances", ylab = "Densité", probability = TRUE)
-hist(data_2017$performances, col = "green", add = TRUE, probability = TRUE)
-hist(data_2022$performances, col = "red", add = TRUE, probability = TRUE)
+# Créer une liste de données
+data_list = list(data_2012, data_2017, data_2022)
+years = c(2012, 2017, 2022)
 
-# Ajouter les courbes de densité correspondantes
-lines(density(data_2012$performances), col = "blue", lwd = 2)
-lines(density(data_2017$performances), col = "green", lwd = 2)
-lines(density(data_2022$performances), col = "red", lwd = 2)
+# Afficher chaque histogramme séparément avec la densité de probabilité sur l'axe y
+for (i in seq_along(data_list)) {
+  # Créer un nouvel espace graphique
+  par(mfrow = c(1, 1))
+  
+  # Créer un histogramme des performances avec densité sur l'axe y
+  hist(data_list[[i]]$Performances, main = paste("Distribution des performances en", years[i]),
+       xlab = "Performances", ylab = "Density", col = "lightblue", border = "black", freq = FALSE)
+  
+  # Ajouter une estimation par noyau de densité
+  lines(density(data_list[[i]]$Performances), col = "red", lwd = 2)
+}
 
-# Légende
-legend("topright", legend = c("2012", "2017", "2022"), fill = c("blue", "green", "red"))
+# ---- Question 2 ----
+
+# Le test de Shapiro-Wilk pour chaque ensemble de données
+for (i in seq_along(data_list)) {
+  result <- shapiro.test(data_list[[i]]$Performances)
+  
+  # Afficher le résultat du test
+  cat("Shapiro-Wilk test for", years[i], ":", "\n")
+  cat("w (Test statistic):", round(result$statistic, 4), "\n")
+  cat("p-value:", round(result$p.value, 4), "\n")
+  
+  # Interprétation du résultat
+  if (result$p.value > 0.05) {
+    cat("Pas de preuve significative pour rejeter l'hypothèse nulle (distribution normale).\n\n")
+  } else {
+    cat("Preuve significative pour rejeter l'hypothèse nulle (non-distribution normale).\n\n")
+  }
+}
+
+
