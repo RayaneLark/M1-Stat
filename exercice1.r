@@ -1,6 +1,5 @@
 # Charger les données
 data = read.csv("psychology.csv", TRUE)
-print(data)
 
 # ---- Question 1 ----
 
@@ -38,17 +37,9 @@ cat("IQR:", IQR_IP, "\n")
 
 # Créer un histogramme pour la variable IBE
 hist(data$IBE, main="Estimation de densité pour IBE", xlab="IBE", col="lightblue", border="black", probability=TRUE)
-lines(density(data$IBE), col="red", lwd=2)
-
-# Ajouter une légende
-legend("topright", legend="Densité", col="red", lwd=2)
 
 # Créer un histogramme pour la variable IP
 hist(data$IP, main="Estimation de densité pour IP", xlab="IP", col="lightgreen", border="black", probability=TRUE)
-lines(density(data$IP), col="blue", lwd=2)
-
-# Ajouter une légende
-legend("topright", legend="Densité", col="blue", lwd=2)
 
 # ---- Question 3 ----
 
@@ -57,21 +48,12 @@ new_breaks_ibe = seq(min(data$IBE), max(data$IBE), length.out = (length(seq(min(
 
 # Créer un histogramme pour la variable IBE avec des intervalles divisés par deux
 hist(data$IBE, breaks = new_breaks_ibe, main="Estimation de densité pour IBE (Intervalles divisés par deux)", xlab="IBE", col="lightblue", border="black", probability=TRUE)
-lines(density(data$IBE), col="red", lwd=2)
-
-# Ajouter une légende
-legend("topright", legend="Densité", col="red", lwd=2)
 
 # Diviser par deux la largeur des intervalles pour IP
 new_breaks_ip = seq(min(data$IP), max(data$IP), length.out = (length(seq(min(data$IP), max(data$IP))) - 1) * 2 + 1)
 
 # Créer un histogramme pour la variable IP avec des intervalles divisés par deux
 hist(data$IP, breaks = new_breaks_ip, main="Estimation de densité pour IP (Intervalles divisés par deux)", xlab="IP", col="lightgreen", border="black", probability=TRUE)
-lines(density(data$IP), col="blue", lwd=2)
-
-# Ajouter une légende
-legend("topright", legend="Densité", col="blue", lwd=2)
-
 
 # ---- Question 4 ----
 
@@ -115,7 +97,6 @@ legend("topright", legend=c("IBE", "IP", "Régression linéaire"), col=c("blue",
 # Calculer et afficher la corrélation
 correlation_coefficient = cor(data$IBE, data$IP)
 cat("Coefficient de corrélation entre IBE et IP:", correlation_coefficient, "\n")
-cat("La ligne de régression est inclinée vers le haut, cela suggère une relation positive entre les variables (quand l'une augmente, l'autre a tendance à augmenter).")
 
 # ---- Question 7 ----
 
@@ -160,7 +141,7 @@ plot(transformed_IBE, transformed_IP, main="Nuage de points entre IBE et IP (Tra
 abline(lm(transformed_IP ~ transformed_IBE), col="red", lwd=2)
 
 # Ajouter une ligne diagonale (pente = 1) en rouge
-abline(a = 0, b = 1, col = "red", lwd = 2, lty = 2)
+abline(a = 0, b = 0.5, col = "red", lwd = 2, lty = 2)
 
 # Ajouter les noms des axes
 text(x = min(transformed_IBE), y = max(transformed_IP), labels = "log(IBE)", pos = 4, col = "purple", cex = 1.2)
